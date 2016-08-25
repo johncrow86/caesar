@@ -20,10 +20,10 @@ page_header = """
 <!DOCTYPE html>
 <html>
 <head>
-    <title>ROT13</title>
+    <title>Caesar</title>
 </head>
 <body>
-    <h1><b>Enter some text to ROT13</b></h1>
+    <h1><b>Enter some text to encrypt</b></h1>
 """
 
 page_footer = """
@@ -33,8 +33,6 @@ page_footer = """
 
 ALPHABET_LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
 ALPHABET_UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
-textToEncrypt = ""
 
 def alphabet_position(letter):
     alphabet = ALPHABET_LOWERCASE if letter.islower() else ALPHABET_UPPERCASE
@@ -57,12 +55,10 @@ def encrypt(text, rotation):
 class MainHandler(webapp2.RequestHandler):
     def get(self):
 
-        rotNumber = 0
-
         main_content = """
-        <form action="/">
-            <label>Enter text to encrypt</label>
-            <input name="text-rot" value="%(textToEncrypt)s"><br>
+        <form>
+            <label>Enter text to encrypt</label><br>
+            <textarea name="text-rot" cols=60 rows=6></textarea><br>
             <label>Enter a number to rotate by</label>
             <input name="num-rot"><br>
             <input type=submit>
@@ -71,9 +67,9 @@ class MainHandler(webapp2.RequestHandler):
 
         textToEncrypt = self.request.get("text-rot")
         rotNumber = self.request.get("num-rot")
-        textToEncrypt = encrypt(textToEncrypt, int(rotNumber))
+        textToEncrypt = "<p>" + encrypt(textToEncrypt, int(rotNumber)) + "</p>"
 
-        response = page_header + main_content + page_footer
+        response = page_header + main_content + textToEncrypt + page_footer
         self.response.write(response)
 
 app = webapp2.WSGIApplication([
